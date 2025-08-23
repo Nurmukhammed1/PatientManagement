@@ -1,0 +1,12 @@
+### Updates patient entity
+POST http://localhost:4000/id
+Content-Type: application/json
+
+{
+  "name": "Nurmukhammed",
+  "email": "nurr@gmail.com",
+  "adress": "Kan 21",
+  "dataOfBirth": "1995-09-09",
+  "registeredDate": "2025-06-06"
+}
+###
