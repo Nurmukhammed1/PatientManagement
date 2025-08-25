@@ -1,12 +1,11 @@
-### Updates patient entity
-POST http://localhost:4000/id
+### Updates a patient entity
+PUT http://localhost:4000/patients/123e4567-e89b-12d3-a456-426614174000
 Content-Type: application/json
 
 {
   "name": "Nurmukhammed",
   "email": "nurr@gmail.com",
   "adress": "Kan 21",
-  "dataOfBirth": "1995-09-09",
-  "registeredDate": "2025-06-06"
+  "dataOfBirth": "1995-09-09"
 }
 ###
