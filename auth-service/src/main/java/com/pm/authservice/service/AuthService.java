@@ -1,9 +1,13 @@
 package com.pm.authservice.service;
 
 import com.pm.authservice.dto.LoginRequestDTO;
+import com.pm.authservice.dto.RegistrationRequestDTO;
 import com.pm.authservice.model.User;
+import com.pm.authservice.repository.UserRepository;
 import com.pm.authservice.util.JwtUtil;
 import io.jsonwebtoken.JwtException;
+import jakarta.validation.ValidationException;
+import org.apache.coyote.BadRequestException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -15,7 +19,7 @@ public class AuthService {
     private final PasswordEncoder passwordEncoder;
     private final JwtUtil jwtUtil;
 
-    public AuthService(UserService userService, PasswordEncoder passwordEncoder, JwtUtil jwtUtil) {
+    public AuthService(UserService userService, PasswordEncoder passwordEncoder, JwtUtil jwtUtil, UserRepository userRepository) {
         this.userService = userService;
         this.passwordEncoder = passwordEncoder;
         this.jwtUtil = jwtUtil;
@@ -36,5 +40,18 @@ public class AuthService {
         } catch (JwtException e) {
             return false;
         }
+    }
+
+    public User register(RegistrationRequestDTO registrationRequestDTO) {
+        if  (userService.findByEmail(registrationRequestDTO.getEmail()).isPresent()) {
+            return null;
+        }
+
+        User user = new User();
+        user.setEmail(registrationRequestDTO.getEmail());
+        user.setPassword(passwordEncoder.encode(registrationRequestDTO.getPassword()));
+        user.setRole("USER");
+
+        return userService.save(user);
     }
 }

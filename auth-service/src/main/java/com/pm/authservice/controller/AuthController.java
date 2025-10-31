@@ -2,6 +2,8 @@ package com.pm.authservice.controller;
 
 import com.pm.authservice.dto.LoginRequestDTO;
 import com.pm.authservice.dto.LoginResponseDTO;
+import com.pm.authservice.dto.RegistrationRequestDTO;
+import com.pm.authservice.dto.RegistrationResponseDTO;
 import com.pm.authservice.service.AuthService;
 import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.http.HttpStatus;
@@ -16,6 +18,18 @@ public class AuthController {
 
     public AuthController(AuthService authService) {
         this.authService = authService;
+    }
+
+    @Operation(summary = "Create new user")
+    @PostMapping("/register")
+    public ResponseEntity<RegistrationResponseDTO> register(@RequestBody RegistrationRequestDTO registrationRequestDTO) {
+        final var user = authService.register(registrationRequestDTO);
+
+        if  (user == null) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).build();
+        }
+
+        return ResponseEntity.ok(new RegistrationResponseDTO(user.getEmail()));
     }
 
     @Operation(summary = "Generate token on user login")

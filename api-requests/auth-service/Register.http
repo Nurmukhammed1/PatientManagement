@@ -1,0 +1,10 @@
+### Register
+POST http://localhost:4004/auth/register
+Content-Type: application/json
+
+{
+  "email": "nurkan@gmail.com",
+  "password": "password123"
+}
+
+###
