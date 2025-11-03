@@ -54,4 +54,49 @@ public class AuthIntergrationTest {
                 .then()
                 .statusCode(401);
     }
+
+    @Test
+    public void shouldReturnRegistredPatientEmail() {
+        String uniqueEmail = "test_user_" + System.currentTimeMillis() + "@test.com";
+
+        String registerPayload = String.format("""
+                {
+                    "email": "%s",
+                    "password": "password123"
+                }
+                """, uniqueEmail);
+
+        Response response = given()
+                .contentType(ContentType.JSON)
+                .body(registerPayload)
+                .when()
+                .post("/auth/register")
+                .then()
+                .statusCode(200)
+                .body("email", notNullValue())
+                .extract()
+                .response();
+
+        System.out.println("Generated Email: " + response.jsonPath().getString("email"));
+    }
+
+    @Test
+    public void shouldReturnConflictWhenEmailAlreadyExists() {
+        String existingEmail = "testuser@test.com";
+
+        String registerPayload = String.format("""
+                {
+                    "email": "%s",
+                    "password": "password123"
+                }
+                """, existingEmail);
+
+        given()
+                .contentType(ContentType.JSON)
+                .body(registerPayload)
+                .when()
+                .post("/auth/register")
+                .then()
+                .statusCode(409);
+    }
 }
